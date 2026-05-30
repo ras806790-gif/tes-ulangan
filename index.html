@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMULASI ULANGAN BY INDEX // VERSION_4.5</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a051b;
+            --neon-purple: #bc13fe;
+            --neon-pink: #ff007f;
+            --neon-cyan: #00f3ff;
+            --dark-purple: #1f0d3d;
+            --text-color: #e0d5ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(188, 19, 254, 0.15) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(0, 243, 255, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- SCREEN MANAGEMENT --- */
+        .screen {
+            display: none;
+            flex: 1;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 20px 80px 20px;
+        }
+
+        /* --- SCREEN 1: WELCOME SCREEN --- */
+        #welcome-screen {
+            display: flex;
+            text-align: center;
+        }
+
+        .cyber-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #fff;
+            text-shadow: 
+                0 0 10px var(--neon-purple),
+                0 0 20px var(--neon-purple),
+                0 0 40px var(--neon-purple);
+            margin-bottom: 10px;
+            animation: glitch 3s infinite;
+        }
+
+        .cyber-subtitle {
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 5px var(--neon-cyan);
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        /* --- WATERMARK FOOTER STYLE --- */
+        .cyber-watermark {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 5, 27, 0.9);
+            border-top: 1px solid rgba(188, 19, 254, 0.4);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+        }
+
+        .watermark-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cyber-watermark a {
+            color: var(--neon-cyan);
+            text-decoration: none;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .cyber-watermark a:hover {
+            color: var(--neon-pink);
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+
+        /* Highlight khusus untuk link tiktok creator */
+        .tiktok-link {
+            color: var(--neon-pink) !important;
+        }
+        .tiktok-link:hover {
+            color: #fff !important;
+            text-shadow: 0 0 8px var(--neon-pink);
+        }
+
+        .saweria-mini-btn {
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            background: rgba(255, 0, 127, 0.2);
+            border: 1px solid var(--neon-pink);
+            border-radius: 3px;
+        }
+        .saweria-mini-btn:hover {
+            background: var(--neon-pink);
+            box-shadow: 0 0 8px var(--neon-pink);
+        }
+
+        /* --- BUTTONS --- */
+        .btn-cyber {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 12px 35px;
+            background: transparent;
+            color: #fff;
+            border: 2px solid var(--neon-purple);
+            cursor: pointer;
+            position: relative;
+            letter-spacing: 3px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(188, 19, 254, 0.4);
+            text-transform: uppercase;
+        }
+
+        .btn-cyber:hover {
+            background: var(--neon-purple);
+            box-shadow: 
+                0 0 20px var(--neon-purple),
+                0 0 40px var(--neon-purple);
+            text-shadow: 0 0 5px #fff;
+        }
+
+        /* --- SCREEN 2: REGISTRATION --- */
+        #reg-screen {
+            display: none;
+        }
+
+        .panel-container {
+            background: rgba(31, 13, 61, 0.6);
+            border: 1px solid var(--neon-purple);
+            box-shadow: 0 0 30px rgba(188, 19, 254, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .panel-container::before {
+            content: "SYS_ACCESS_INDEX_v4.5";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--bg-color);
+            padding: 0 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: var(--neon-cyan);
+            letter-spacing: 1px;
+        }
+
+        .logo-box {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .logo-school {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            color: var(--neon-cyan);
+        }
+
+        .cyber-select {
+            background: rgba(10, 5, 27, 0.8);
+            border: 1px solid var(--neon-purple);
+            padding: 12px;
+            color: #fff;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .cyber-select:focus {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+        }
+
+        .cyber-select option {
+            background: var(--dark-purple);
+            color: #fff;
+        }
+
+        /* --- SCREEN 3: EXAM CORE INTERFACE --- */
+        #exam-screen {
+            display: none;
+            align-items: stretch;
+            justify-content: flex-start;
+            max-width: 900px;
+            margin: 0 auto;
+            padding-top: 40px;
+        }
+
+        .meta-header {
+            width: 100%;
+            border-bottom: 2px dashed var(--neon-purple);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--neon-cyan);
+        }
+
+        .question-card {
+            background: rgba(20, 10, 40, 0.7);
+            border: 1px solid var(--neon-purple);
+            padding: 30px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: 500;
+            color: #fff;
+            line-height: 1.5;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            background: rgba(10, 5, 27, 0.6);
+            border: 1px solid rgba(188, 19, 254, 0.4);
+            padding: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-item:hover {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        .option-item input[type="radio"] {
+            margin-right: 15px;
+            accent-color: var(--neon-pink);
+            transform: scale(1.3);
+        }
+
+        .option-item label {
+            cursor: pointer;
+            font-size: 1.1rem;
+            width: 100%;
+        }
+
+        /* --- SCREEN 4: EVALUATION SCORE MATRIX --- */
+        #result-screen {
+            display: none;
+        }
+
+        .score-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            color: var(--neon-pink);
+            text-shadow: 0 0 20px var(--neon-pink);
+            margin: 20px 0;
+        }
+
+        .matrix-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            font-size: 1rem;
+            text-align: left;
+        }
+
+        .matrix-table th, .matrix-table td {
+            padding: 8px;
+            border-bottom: 1px solid rgba(188, 19, 254, 0.3);
+        }
+        .matrix-table th {
+            color: var(--neon-cyan);
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes glitch {
+            0% { text-shadow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-purple); }
+            50% { text-shadow: 0 0 15px var(--neon-pink), 0 0 25px var(--neon-pink); }
+            100% { text-shadow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-purple); }
+        }
+
+        @media (max-width: 600px) {
+            .cyber-title { font-size: 1.8rem; }
+            .panel-container { padding: 25px; }
+            .cyber-watermark { flex-direction: column; gap: 8px; font-size: 0.85rem; padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="welcome-screen" class="screen">
+        <h1 class="cyber-title">SIMULASI ULANGAN BY INDEX</h1>
+        <p class="cyber-subtitle">Sistem Simulasi Ulangan Berbasis Cloud</p>
+        <button class="btn-cyber" onclick="nextScreen()">LANJUT</button>
+    </div>
+
+    <div id="reg-screen" class="screen">
+        <div class="panel-container">
+            
+            <div class="logo-box">
+                <img src="https://lh3.googleusercontent.com/d/1SDoMGOwKGofQoZChsvcD71M5A46HQrgP" alt="Logo Sekolah" class="logo-school" onerror="this.src='https://via.placeholder.com/90/110022/ffffff?text=LOGO'">
+            </div>
+
+            <div class="form-group">
+                <label>Jenjang Pendidikan</label>
+                <select id="level" class="cyber-select" onchange="updateClassAndSubjects()">
+                    <option value="" disabled selected>-- Pilih Jenjang --</option>
+                    <option value="SD">SD (Kurikulum Merdeka)</option>
+                    <option value="SMP">SMP (Kurikulum Merdeka)</option>
+                    <option value="SMA">SMA (Kurikulum Merdeka)</option>
+                    <option value="SMK">SMK (Kurikulum Merdeka)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Kelas</label>
+                <select id="classRoom" class="cyber-select" onchange="updateSubjects()">
+                    <option value="" disabled selected>-- Pilih Jenjang Lebih Dulu --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Mata Pelajaran</label>
+                <select id="subject" class="cyber-select">
+                    <option value="" disabled selected>-- Pilih Kelas Lebih Dulu --</option>
+                </select>
+            </div>
+
+            <div style="text-align: right; margin-top: 30px;">
+                <button class="btn-cyber" onclick="startExam()">MULAI ULANGAN</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="exam-screen" class="screen">
+        <div class="meta-header">
+            <div>CORE: <span id="meta-lvl"></span> // <span id="meta-cls"></span></div>
+            <div>MAPEL: <span id="meta-sbj"></span></div>
+        </div>
+
+        <div id="questions-terminal" style="width:100%;">
+            </div>
+
+        <div style="text-align: center; margin: 40px 0; width:100%;">
+            <button class="btn-cyber" style="border-color:var(--neon-pink);" onclick="evaluateAnswers()">SUBMIT JAWABAN</button>
+        </div>
+    </div>
+
+    <div id="result-screen" class="screen">
+        <div class="panel-container" style="text-align: center;">
+            <h2 class="cyber-title" style="font-size: 2rem; color: var(--neon-cyan);">HASIL EVALUASI</h2>
+            
+            <div class="score-display" id="total-score">0</div>
+            <p style="font-size:1.3rem; letter-spacing:1px; margin-bottom:20px;">
+                BENAR: <span id="correct-count" style="color:var(--neon-cyan); font-weight:bold;">0</span> / 25 SOAL
+            </p>
+
+            <hr style="border:0; border-top:1px solid var(--neon-purple); margin:20px 0;">
+            
+            <p style="text-align:left; color: var(--neon-cyan); font-weight:bold;">📊 MATRIX SKORING AUTOMATIC:</p>
+            <table class="matrix-table">
+                <tr><th>Status</th><th>Kalkulasi Nilai</th></tr>
+                <tr><td>1-5 Benar</td><td>4, 8, 12, 16, 20</td></tr>
+                <tr><td>6-10 Benar</td><td>24, 28, 32, 36, 40</td></tr>
+                <tr><td>11-15 Benar</td><td>44, 48, 52, 56, 60</td></tr>
+                <tr><td>16-20 Benar</td><td>64, 68, 72, 76, 80</td></tr>
+                <tr><td>21-25 Benar</td><td>84, 88, 92, 96, 100</td></tr>
+            </table>
+
+            <button class="btn-cyber" style="margin-top:30px; font-size:1rem;" onclick="location.reload()">RESTART SIMULASI</button>
+        </div>
+    </div>
+
+    <footer class="cyber-watermark">
+        <div class="watermark-item">
+            🛰️ <span style="color:var(--text-color);">Creator:</span> <a href="https://www.tiktok.com/@tiktok_santai6" target="_blank" class="tiktok-link">tiktok_santai6</a>
+        </div>
+        <div class="watermark-item">
+            📡 <span style="color:var(--text-color);">Telegram:</span> <a href="https://t.me/im_gokil" target="_blank">t.me/im_gokil</a>
+        </div>
+        <div class="watermark-item">
+            💎 <span style="color:var(--text-color);">Support:</span> <a class="saweria-mini-btn" href="https://saweria.co/idex" target="_blank">Saweria.co/idex</a>
+        </div>
+    </footer>
+
+    <script>
+        // Database Arsitektur Kurikulum Merdeka Terintegrasi
+        const database = {
+            SD: {
+                classes: ["Kelas 1", "Kelas 2", "Kelas 3", "Kelas 4", "Kelas 5", "Kelas 6"],
+                subjects: {
+                    "Kelas 1": ["Pendidikan Agama & Budi Pekerti", "Pendidikan Pancasila", "Bahasa Indonesia", "Matematika", "IPAS", "PJOK", "Seni Budaya"],
+                    "Kelas 2": ["Pendidikan Agama & Budi Pekerti", "Pendidikan Pancasila", "Bahasa Indonesia", "Matematika", "IPAS", "PJOK"],
+                    "Kelas 3": ["Pendidikan Agama & Budi Pekerti", "Pendidikan Pancasila", "Bahasa Indonesia", "Matematika", "IPAS"],
+                    "Kelas 4": ["Pendidikan Agama & Budi Pekerti", "Pendidikan Pancasila", "Bahasa Indonesia", "Matematika", "IPAS"],
+                    "Kelas 5": ["Pendidikan Agama & Budi Pekerti", "Pendidikan Pancasila", "Bahasa Indonesia", "Matematika", "IPAS"],
+                    "Kelas 6": ["Pendidikan Agama & Budi Pekerti", "Pendidikan Pancasila", "Bahasa Indonesia", "Matematika", "IPAS"]
+                }
+            },
+            SMP: {
+                classes: ["Kelas 7", "Kelas 8", "Kelas 9"],
+                subjects: {
+                    "Kelas 7": ["Pendidikan Agama & Budi Pekerti", "Pendidikan Pancasila & Kewarganegaraan", "Bahasa Indonesia", "Matematika", "IPA Terpadu", "IPS Terpadu", "Informatika"],
+                    "Kelas 8": ["Pendidikan Agama & Budi Pekerti", "Pendidikan Pancasila", "Bahasa Indonesia", "Matematika", "IPA", "IPS", "Informatika"],
+                    "Kelas 9": ["Pendidikan Agama & Budi Pekerti", "Pendidikan Pancasila", "Bahasa Indonesia", "Matematika", "IPA", "IPS", "Informatika"]
+                }
+            },
+            SMA: {
+                classes: ["Kelas 10 (Fase E)", "Kelas 11 (Fase F - MIPA)", "Kelas 11 (Fase F - IPS)", "Kelas 12 (Fase F)"],
+                subjects: {
+                    "Kelas 10 (Fase E)": ["Pendidikan Agama & Budi Pekerti", "Pendidikan Pancasila", "Bahasa Indonesia", "Matematika (Umum)", "IPA Terpadu", "IPS Terpadu", "Informatika"],
+                    "Kelas 11 (Fase F - MIPA)": ["Matematika (MIPA)", "Fisika", "Kimia", "Biologi", "Bahasa Indonesia"],
+                    "Kelas 11 (Fase F - IPS)": ["Matematika (IPS)", "Geografi", "Sejarah Indonesia", "Sosiologi", "Ekonomi"],
+                    "Kelas 12 (Fase F)": ["Matematika Lanjut", "Fisika Modern", "Ekonomi Digital", "Bahasa Inggris Komunikasi"]
+                }
+            },
+            SMK: {
+                classes: ["Kelas 10 (Fase E)", "Kelas 11 (Fase F)", "Kelas 12 (Fase F)"],
+                subjects: {
+                    "Kelas 10 (Fase E)": ["Kelompok Umum", "Projek IPAS", "Dasar-Dasar Program Keahlian", "K3 (Keselamatan Kerja)", "Dasar Kreatif"],
+                    "Kelas 11 (Fase F)": ["Kelompok Umum Diperdalam", "Konsentrasi Keahlian (Teknik Komputer)", "Konsentrasi Keahlian (Teknik Mesin)", "Produk Kreatif & Kewirausahaan"],
+                    "Kelas 12 (Fase F)": ["PKL / Praktik Kerja Lapangan", "Uji Kompetensi Keahlian", "Kewirausahaan Lanjut"]
+                }
+            }
+        };
+
+        // BANK DATA: 25 Soal yang Berbeda secara Spesifik & Acak
+        const masterQuestions = [
+            { q: "Manakah panca indra yang berfungsi untuk mendeteksi rangsangan cahaya di lingkungan sekitar?", a: "Mata", b: "Telinga", c: "Kulit", d: "Hidung", key: "A" },
+            { q: "Berdasarkan simbol negara, sila ke-3 dalam Pancasila dilambangkan oleh komponen struktur apa?", a: "Rantai Emas", b: "Pohon Beringin", c: "Bintang", d: "Kepala Banteng", key: "B" },
+            { q: "Hasil akhir dari pengerjaan matematika penjumlahan operasi bilangan 14 + 5 adalah?", a: "17", b: "18", c: "19", d: "20", key: "C" },
+            { q: "Perubahan wujud benda yang terjadi ketika air dimasukkan ke dalam ruang pembeku (freezer) disebut?", a: "Mencair", b: "Menguap", c: "Menyublim", d: "Membeku", key: "D" },
+            { q: "Manakah di bawah ini yang merupakan contoh lagu anak-anak tradisional Indonesia?", a: "Pelangi-Pelangi", b: "Indonesia Raya", c: "Mengheningkan Cipta", d: "Bagimu Negeri", key: "A" },
+            { q: "Berapakah nilai tempat angka 7 dalam susunan bilangan desimal 74?", a: "Satuan", b: "Puluhan", c: "Ratusan", d: "Ribuan", key: "B" },
+            { q: "Bagian tanaman yang berfungsi menyerap komponen air dan unsur hara di dalam tanah adalah?", a: "Daun", b: "Batang", c: "Akar", d: "Bunga", key: "C" },
+            { q: "Mata uang resmi yang sah digunakan di dalam wilayah kedaulatan Negara Indonesia adalah?", a: "Ringgit", b: "Dollar", c: "Yen", d: "Rupiah", key: "D" },
+            { q: "Berapakah nilai pecahan dasar yang terbentuk jika satu buah kue dibagi rata menjadi dua bagian?", a: "1/2", b: "1/3", c: "1/4", d: "1/5", key: "A" },
+            { q: "Dalam materi IPAS, manakah yang digolongkan sebagai contoh komponen lingkungan alam buatan?", a: "Laut", b: "Waduk / Bendungan", c: "Gunung", d: "Hutan Rimba", key: "B" },
+            { q: "Gaya yang bekerja saat kita menarik atau mendorong pintu ruangan belajar disebut gaya?", a: "Gaya Pegas", b: "Gaya Magnet", c: "Gaya Otot / Sentuh", d: "Gaya Gravitasi", key: "C" },
+            { q: "Perangkat keras komputer yang berfungsi utama sebagai unit pemrosesan data pusat adalah?", a: "Monitor", b: "Keyboard", c: "Mouse", d: "CPU", key: "D" },
+            { q: "Manakah struktur di bawah ini yang dikategorikan sebagai jenis teks cerita fantasi?", a: "Kisah Sang Penyihir Waktu", b: "Laporan Hasil Observasi Pasar", c: "Panduan Pembuatan Paspor", d: "Artikel Berita Banjir", key: "A" },
+            { q: "Sistem bilangan berpangkat dari nilai 3 pangkat 2 (3²) menghasilkan jumlah?", a: "6", b: "9", c: "12", d: "15", key: "B" },
+            { q: "Komponen unit sel terkecil makhluk hidup yang bertindak sebagai tempat terjadinya respirasi seluler adalah?", a: "Dinding Sel", b: "Kloroplas", c: "Mitokondria", d: "Vakuola", key: "C" },
+            { q: "Alat optik alami yang dimiliki oleh mahluk hidup tingkat tinggi untuk melihat adalah?", a: "Mikroskop", b: "Teleskop", c: "Kacamata", d: "Mata", key: "D" },
+            { q: "Manakah bahasa asing yang digunakan secara internasional sebagai bahasa komunikasi global utama?", a: "Bahasa Inggris", b: "Bahasa Daerah", c: "Bahasa Isyarat", d: "Bahasa Sansekerta", key: "A" },
+            { q: "Nilai rata-rata dari sekelompok data dalam ilmu statistika matematika dikenal dengan istilah?", a: "Modus", b: "Mean", c: "Median", d: "Kuartil", key: "B" },
+            { q: "Ilmu sosial yang secara khusus mempelajari pola interaksi dinamika perilaku masyarakat disebut?", a: "Antropologi", b: "Ekonomi", c: "Sosiologi", d: "Geografi", key: "C" },
+            { q: "Konsep dasar ekonomi di mana jumlah sumber daya lebih sedikit dibanding kebutuhan manusia disebut?", a: "Inflasi", b: "Deflasi", c: "Pasar", d: "Kelangkaan", key: "D" },
+            { q: "Bahasa pemrograman tingkat tinggi yang menggunakan sintaksis bersih dan mendukung eksekusi skrip Termux/Python adalah?", a: "Python", b: "HTML", c: "CSS", d: "Binary", key: "A" },
+            { q: "Rumus matematika dasar untuk menghitung volume bangun ruang Kubus dengan sisi (s) adalah?", a: "s x s", b: "s x s x s", c: "4 x s", d: "6 x s x s", key: "B" },
+            { q: "Komponen darah manusia yang berfungsi mengikat oksigen dan mengedarkannya ke seluruh tubuh adalah?", a: "Plasma Darah", b: "Keping Darah", c: "Sel Darah Merah", d: "Sel Darah Putih", key: "C" },
+            { q: "Peristiwa proklamasi kemerdekaan Republik Indonesia secara historis dikumandangkan pada tahun?", a: "1908", b: "1928", c: "1942", d: "1945", key: "D" },
+            { q: "Organisasi internasional perhimpunan bangsa-bangsa di kawasan Asia Tenggara dinamakan?", a: "ASEAN", b: "PBB", c: "G20", d: "WHO", key: "A" }
+        ];
+
+        let realKeys = []; // Array penampung kunci jawaban dinamis
+
+        function nextScreen() {
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('reg-screen').style.display = 'flex';
+        }
+
+        function updateClassAndSubjects() {
+            const levelSelect = document.getElementById('level').value;
+            const classSelect = document.getElementById('classRoom');
+            const subjectSelect = document.getElementById('subject');
+
+            classSelect.innerHTML = '<option value="" disabled selected>-- Pilih Kelas --</option>';
+            subjectSelect.innerHTML = '<option value="" disabled selected>-- Pilih Mata Pelajaran --</option>';
+
+            if (database[levelSelect]) {
+                database[levelSelect].classes.forEach(cls => {
+                    let option = document.createElement('option');
+                    option.value = cls;
+                    option.textContent = cls;
+                    classSelect.appendChild(option);
+                });
+            }
+        }
+
+        function updateSubjects() {
+            const levelSelect = document.getElementById('level').value;
+            const classSelect = document.getElementById('classRoom').value;
+            const subjectSelect = document.getElementById('subject');
+
+            subjectSelect.innerHTML = '<option value="" disabled selected>-- Pilih Mata Pelajaran --</option>';
+
+            if (database[levelSelect] && database[levelSelect].subjects[classSelect]) {
+                database[levelSelect].subjects[classSelect].forEach(sbj => {
+                    let option = document.createElement('option');
+                    option.value = sbj;
+                    option.textContent = sbj;
+                    subjectSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Generate 25 Butir Soal yang Benar-Benar Berbeda
+        function startExam() {
+            const level = document.getElementById('level').value;
+            const classRoom = document.getElementById('classRoom').value;
+            const subject = document.getElementById('subject').value;
+
+            if(!level || !classRoom || !subject) {
+                alert("⚠️ ERROR: Sektor data enkripsi belum lengkap!");
+                return;
+            }
+
+            document.getElementById('meta-lvl').textContent = level;
+            document.getElementById('meta-cls').textContent = classRoom.toUpperCase();
+            document.getElementById('meta-sbj').textContent = subject.toUpperCase();
+
+            const container = document.getElementById('questions-terminal');
+            container.innerHTML = "";
+            realKeys = []; // Reset kunci
+
+            // Loop merender 25 bank soal masterQuestions satu per satu
+            masterQuestions.forEach((item, index) => {
+                let qIndex = index + 1;
+                realKeys.push(item.key); // Daftarkan kunci jawaban
+
+                container.innerHTML += `
+                    <div class="question-card">
+                        <div class="question-text"><strong>SOAL ${qIndex}:</strong> ${item.q}</div>
+                        <div class="options-container">
+                            <div class="option-item">
+                                <input type="radio" name="q${qIndex}" id="q${qIndex}a" value="A">
+                                <label for="q${qIndex}a">A. ${item.a}</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" name="q${qIndex}" id="q${qIndex}b" value="B">
+                                <label for="q${qIndex}b">B. ${item.b}</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" name="q${qIndex}" id="q${qIndex}c" value="C">
+                                <label for="q${qIndex}c">C. ${item.c}</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="radio" name="q${qIndex}" id="q${qIndex}d" value="D">
+                                <label for="q${qIndex}d">D. ${item.d}</label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('reg-screen').style.display = 'none';
+            document.getElementById('exam-screen').style.display = 'block';
+            window.scrollTo(0,0);
+        }
+
+        // Kalkulator Evaluasi Skor Otomatis (Benar x 4 Poin)
+        function evaluateAnswers() {
+            let totalCorrect = 0;
+
+            for(let i = 1; i <= 25; i++) {
+                const checkedRadio = document.querySelector(`input[name="q${i}"]:checked`);
+                if(checkedRadio) {
+                    if(checkedRadio.value === realKeys[i-1]) {
+                        totalCorrect++;
+                    }
+                }
+            }
+
+            const finalScore = totalCorrect * 4;
+
+            document.getElementById('correct-count').textContent = totalCorrect;
+            document.getElementById('total-score').textContent = finalScore;
+
+            document.getElementById('exam-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'flex';
+            window.scrollTo(0,0);
+        }
+    </script>
+</body>
+</html>
